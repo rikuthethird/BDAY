@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A Little Birthday Surprise 💕</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff0f3',
+              100: '#ffe3e8',
+              200: '#fcc7d1',
+              300: '#f89aaa',
+              400: '#f36680',
+              500: '#e63956',
+              600: '#c81e3a',
+              700: '#9b132a',
+              cardBg: '#fffbf9',
+              paper: '#faf4ef',
+              textSerif: '#7a2233',
+              textSub: '#915b66'
+            }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+            handwriting: ['Caveat', 'cursive']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #fcebe6;
+      background-image: radial-gradient(#f7cbd4 1px, transparent 1px);
+      background-size: 24px 24px;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    .heart-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: -100px;
+      color: rgba(243, 102, 128, 0.25);
+      animation: floatUp 12s linear infinite;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+      10% { opacity: 0.8; }
+      90% { opacity: 0.8; }
+      100% { transform: translateY(-120vh) rotate(360deg) scale(1.2); opacity: 0; }
+    }
+
+    .wax-seal {
+      background: radial-gradient(circle at 30% 30%, #e63956, #a11b33);
+      box-shadow: 0 4px 12px rgba(161, 27, 51, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .wax-seal:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 16px rgba(161, 27, 51, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #f36680;
+      border-radius: 10px;
+    }
+
+    .card-shadow {
+      box-shadow: 0 15px 35px -5px rgba(230, 57, 86, 0.15), 0 0 15px rgba(0, 0, 0, 0.04);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6 relative">
+
+  <div class="heart-bg" id="heartBg"></div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-5 right-5 z-50 bg-white border border-brand-200 text-brand-700 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-3 transform translate-y-[-100px] opacity-0 transition-all duration-300">
+    <span id="toastIcon"><i class="fa-solid fa-heart text-brand-500"></i></span>
+    <span id="toastMsg" class="text-sm font-medium">Notification message</span>
+  </div>
+
+  <main class="w-full max-w-md mx-auto z-10 relative">
+
+    <!-- 1. PASSWORD GATE SCREEN -->
+    <div id="screenPassword" class="bg-brand-cardBg card-shadow rounded-3xl p-8 text-center border border-brand-100 transition-all duration-500">
+      <div class="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-brand-100 shadow-inner">
+        <i class="fa-solid fa-lock text-2xl text-brand-500"></i>
+      </div>
+      <span class="text-xs font-semibold tracking-widest text-brand-400 uppercase">Private Birthday Gift</span>
+      <h1 class="font-serif text-3xl font-bold text-brand-textSerif mt-1 mb-2">Unlock Cleo's Surprise</h1>
+      <p class="text-xs text-brand-textSub mb-6">Enter the secret passcode to access your gifts.</p>
+
+      <form onsubmit="unlockSite(event)" class="space-y-4">
+        <input 
+          type="password" 
+          id="passcode"
+          placeholder="Enter passcode (BDAY2026)"
+          class="w-full px-4 py-3.5 rounded-2xl border border-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-400 text-center text-brand-700 font-medium placeholder-brand-300 text-sm bg-white shadow-inner"
+          required
+        />
+        <button 
+          type="submit"
+          class="w-full py-3.5 bg-brand-500 hover:bg-brand-600 text-white font-semibold rounded-2xl shadow-lg shadow-brand-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 text-sm"
+        >
+          <span>Unlock Gift</span>
+          <i class="fa-solid fa-key text-xs"></i>
+        </button>
+      </form>
+      <p class="text-[11px] text-brand-300 mt-4">Passcode: <span class="font-mono bg-brand-50 px-2 py-0.5 rounded text-brand-500 font-semibold">????</span></p>
+    </div>
+
+    <!-- 2. MAIN MENU HUB SCREEN -->
+    <div id="screenMenu" class="hidden opacity-0 scale-95 transition-all duration-500 space-y-4 text-center">
+      <div class="bg-brand-cardBg card-shadow rounded-3xl p-6 border border-brand-100">
+        <span class="text-[11px] font-bold tracking-widest text-brand-400 uppercase">MADE JUST FOR YOU</span>
+        <h2 class="font-serif text-3xl font-bold text-brand-textSerif mt-1">A Birthday Surprise</h2>
+        <p class="font-serif italic text-brand-textSub text-sm mt-1 mb-6">for Cleo, with love Riku ♡</p>
+
+        <!-- 2 Feature Buttons -->
+        <div class="space-y-3">
+          <button onclick="navigateTo('envelope')" class="w-full py-4 px-5 bg-white hover:bg-brand-50 border border-brand-200 rounded-2xl shadow-sm flex items-center justify-between group transition-all transform active:scale-98">
+            <div class="flex items-center gap-3.5">
+              <span class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center text-xl">💌</span>
+              <div class="text-left">
+                <div class="text-sm font-bold text-brand-textSerif group-hover:text-brand-500 transition-colors">Personal Letter</div>
+                <div class="text-[11px] text-brand-textSub">Open your birthday card</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-brand-300 group-hover:translate-x-1 transition-transform"></i>
+          </button>
+
+          <button onclick="navigateTo('dog')" class="w-full py-4 px-5 bg-white hover:bg-brand-50 border border-brand-200 rounded-2xl shadow-sm flex items-center justify-between group transition-all transform active:scale-98">
+            <div class="flex items-center gap-3.5">
+              <span class="w-10 h-10 rounded-xl bg-brand-100 flex items-center justify-center text-xl">🐶</span>
+              <div class="text-left">
+                <div class="text-sm font-bold text-brand-textSerif group-hover:text-brand-500 transition-colors">Smart AI Dog Companion</div>
+                <div class="text-[11px] text-brand-textSub">Chat with Barnaby the pup</div>
+              </div>
+            </div>
+            <i class="fa-solid fa-chevron-right text-xs text-brand-300 group-hover:translate-x-1 transition-transform"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ENVELOPE SCREEN -->
+    <div id="screenEnvelope" class="hidden opacity-0 scale-95 transition-all duration-500 text-center">
+      <div class="mb-4">
+        <span class="text-xs font-semibold tracking-widest text-brand-400 uppercase">A BIRTHDAY CARD FOR</span>
+        <h2 class="font-serif text-3xl font-bold text-brand-textSerif">Cleo</h2>
+        <p class="font-serif italic text-brand-textSub text-xs">with love, Riku</p>
+      </div>
+
+      <div class="bg-gradient-to-b from-[#fff5f6] to-[#ffebee] border border-brand-200 rounded-3xl p-6 card-shadow relative overflow-hidden flex flex-col items-center justify-center min-h-[300px]">
+        <div class="absolute inset-0 border-b-[160px] border-b-brand-100/40 pointer-events-none"></div
+        <p class="font-serif italic text-brand-textSub text-xs mb-6 z-10">♡ all my love, in here ♡</p>
+
+        <button onclick="openLetterCard()" class="wax-seal w-24 h-24 rounded-full flex flex-col items-center justify-center text-white z-20 cursor-pointer group mb-6 relative">
+          <div class="w-20 h-20 rounded-full border border-pink-300/40 flex items-center justify-center flex-col">
+            <i class="fa-solid fa-heart text-xl text-pink-100 group-hover:scale-125 transition-transform duration-300"></i>
+            <span class="text-[9px] uppercase tracking-wider font-semibold mt-1 opacity-90">Open</span>
+          </div>
+        </button>
+
+        <span class="text-xs text-brand-400 font-medium z-10">Press the seal to open</span>
+      </div>
+
+      <button onclick="navigateTo('menu')" class="mt-5 py-2.5 px-5 bg-white border border-brand-200 hover:bg-brand-50 text-brand-700 font-semibold rounded-2xl text-xs flex items-center justify-center gap-2 mx-auto shadow-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Menu
+      </button>
+    </div>
+
+    <!-- 4. LETTER CARD DISPLAY SCREEN -->
+    <div id="screenLetter" class="hidden opacity-0 scale-95 transition-all duration-500">
+      <div class="bg-brand-cardBg card-shadow rounded-3xl p-6 sm:p-8 border border-brand-100 relative text-left">
+        <div class="text-center mb-4">
+          <span class="text-[10px] font-bold tracking-widest text-brand-400 uppercase block">A NOTE, JUST FOR YOU</span>
+          <h2 class="font-serif text-3xl font-bold text-brand-textSerif">Happy birthday!</h2>
+        </div>
+
+        <div class="font-serif italic text-brand-textSerif text-lg font-semibold mb-2">Dear Cleo,</div>
+        <p class="text-xs sm:text-sm text-brand-textSub leading-relaxed font-sans custom-scrollbar max-h-[240px] overflow-y-auto pr-1">
+          Happy birthday, my love, my darling, my baby, and my yeowoo. ❤️
+
+<br> First, I want to thank your parents because, well, without them, you wouldn't exist Lol. And because of them, you're here, with me. I also want to thank you because, out of all the people you could have loved, you chose me. You trusted me even though it hadn't been that long since your last relationship, and even though you kinda doubted me at first, you still stayed (even tho you're just being people pleaser ahh). I genuinely appreciate that, my love. Thank you so much for everything, for choosing me, for staying, and for letting me be part of your life. <br>
+
+<br>Next, I'm sorry. I'm sorry for everything I've done, for the times I've hurt you and made you cry, and for the moments when my actions or words made you overthink. I'm sorry for the times I couldn't explain myself properly or couldn't find the right words to make you understand what I meant. Sometimes, I know I struggle to express what's going on in my head, and I end up making things harder than they should be. I'm not saying this to excuse anything, but I genuinely am sorry. You didn't deserve to be hurt by the person who's supposed to love you.<br>
+
+<br>Lastly, I wish you a happy life, baby. I hope you get everything you've been wishing for, achieve the things you've been working hard for, and experience all the good things life has to offer. I hope you always find reasons to smile, even on days when things get difficult. I hope you never lose the little things that make you who you are, and I hope you always remember to take care of yourself too.<br>
+
+I want a good future for you, whether I'm part of it or not. Of course, I hope I get to be there and experience it with you, but above everything, I genuinely want you to be happy. You deserve that and so much more.
+
+Happy birthday again, my baby. Enjoy your day, okay? Don't forget that you're loved and appreciated. I love you so much. ❤️
+         
+      
+        </p>
+
+        <div class="font-serif italic text-brand-textSerif text-sm pt-4 text-right">
+          with love,<br>
+          <span class="font-bold text-base">Riku</span>
+        </div>
+
+        <div class="text-center mt-4">
+          <i class="fa-regular fa-heart text-brand-400 text-lg"></i>
+        </div>
+      </div>
+
+      <button onclick="navigateTo('menu')" class="mt-5 py-2.5 px-5 bg-white border border-brand-200 hover:bg-brand-50 text-brand-700 font-semibold rounded-2xl text-xs flex items-center justify-center gap-2 mx-auto shadow-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Menu
+      </button>
+    </div>
+
+    <!-- 5. SMART AI DOG COMPANION SCREEN -->
+    <div id="screenDog" class="hidden opacity-0 scale-95 transition-all duration-500">
+      <div class="bg-brand-cardBg card-shadow rounded-3xl p-5 border border-brand-100 flex flex-col h-[520px]">
+        
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-brand-100">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-brand-100 rounded-full flex items-center justify-center text-xl border border-brand-200">🐶</div>
+            <div>
+              <h3 class="font-bold text-xs text-brand-textSerif">Barnaby <span class="text-[10px] font-normal text-green-600 bg-green-50 px-1.5 py-0.5 rounded-full border border-green-200">AI Dog • Active</span></h3>
+              <p class="text-[10px] text-brand-textSub">Cleo's Smart Birthday Puppy</p>
+            </div>
+          </div>
+          <button onclick="dogBarkAudio()" class="w-8 h-8 rounded-full bg-brand-50 text-brand-500 hover:bg-brand-100 flex items-center justify-center text-xs" title="Make Barnaby Bark">
+            <i class="fa-solid fa-volume-high"></i>
+          </button>
+        </div>
+
+        <!-- Chat Area -->
+        <div id="chatMessages" class="flex-grow overflow-y-auto custom-scrollbar my-3 space-y-3 p-1">
+          <!-- Initial Dog Message -->
+          <div class="flex items-start gap-2">
+            <div class="w-7 h-7 rounded-full bg-brand-100 flex items-center justify-center text-xs flex-shrink-0">🐶</div>
+            <div class="bg-white border border-brand-100 rounded-2xl rounded-tl-none p-3 text-xs text-brand-700 shadow-sm max-w-[80%]">
+              Woof woof! Happy Birthday Cleo! 🎂 I'm Barnaby, your super smart puppy gift from Riku! You can ask me anything or talk to me whenever you like! 🐾
+            </div>
+          </div>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-2 custom-scrollbar text-[10px]">
+          <button onclick="sendQuickMessage('Who is a good boy? 🦴')" class="whitespace-nowrap px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 rounded-full font-medium">Who's a good boy? 🦴</button>
+          <button onclick="sendQuickMessage('Tell me something sweet about Riku! 💕')" class="whitespace-nowrap px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 rounded-full font-medium">Tell me about Riku! 💕</button>
+          <button onclick="sendQuickMessage('Tell me a dog joke! 😄')" class="whitespace-nowrap px-2.5 py-1 bg-brand-50 hover:bg-brand-100 text-brand-600 border border-brand-200 rounded-full font-medium">Dog joke! 😄</button>
+        </div>
+
+        <!-- Input Box -->
+        <form onsubmit="handleDogChat(event)" class="flex items-center gap-2 pt-2 border-t border-brand-100">
+          <input 
+            type="text" 
+            id="dogInput"
+            placeholder="Type anything to Barnaby..."
+            class="flex-grow px-3.5 py-2.5 rounded-xl border border-brand-200 focus:outline-none focus:ring-1 focus:ring-brand-400 text-xs text-brand-700 placeholder-brand-300 bg-white"
+          />
+          <button type="submit" id="dogSendBtn" class="w-9 h-9 bg-brand-500 hover:bg-brand-600 text-white rounded-xl flex items-center justify-center text-xs shadow-sm flex-shrink-0">
+            <i class="fa-solid fa-paper-plane"></i>
+          </button>
+        </form>
+      </div>
+
+      <button onclick="navigateTo('menu')" class="mt-4 py-2.5 px-5 bg-white border border-brand-200 hover:bg-brand-50 text-brand-700 font-semibold rounded-2xl text-xs flex items-center justify-center gap-2 mx-auto shadow-sm">
+        <i class="fa-solid fa-arrow-left"></i> Back to Menu
+      </button>
+    </div>
+
+  </main>
+
+  <script>
+    const SECRET_CODE = "1103";
+    let dogChatHistory = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      createFloatingHearts();
+    });
+
+    function createFloatingHearts() {
+      const heartContainer = document.getElementById('heartBg');
+      const heartIcons = ['♥', '💖', '💕', '💗', '🌸'];
+      for (let i = 0; i < 15; i++) {
+        const heart = document.createElement('div');
+        heart.className = 'floating-heart';
+        heart.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+        heart.style.left = `${Math.random() * 100}%`;
+        heart.style.animationDelay = `${Math.random() * 10}s`;
+        heart.style.fontSize = `${Math.random() * 14 + 12}px`;
+        heartContainer.appendChild(heart);
+      }
+    }
+
+    function unlockSite(e) {
+      e.preventDefault();
+      const code = document.getElementById("passcode").value.trim();
+      if (code.toUpperCase() === SECRET_CODE) {
+        showToast("Welcome, Cleo! 💕", "fa-heart");
+        navigateTo("menu");
+      } else {
+        showToast("Incorrect passcode! Try Again", "fa-circle-xmark");
+      }
+    }
+
+    function navigateTo(target) {
+      const screens = {
+        password: document.getElementById("screenPassword"),
+        menu: document.getElementById("screenMenu"),
+        envelope: document.getElementById("screenEnvelope"),
+        letter: document.getElementById("screenLetter"),
+        dog: document.getElementById("screenDog")
+      };
+
+      Object.values(screens).forEach(screen => {
+        if (screen && !screen.classList.contains("hidden")) {
+          screen.classList.add("opacity-0", "scale-95");
+          setTimeout(() => screen.classList.add("hidden"), 300);
+        }
+      });
+
+      setTimeout(() => {
+        const active = screens[target];
+        if (active) {
+          active.classList.remove("hidden");
+          setTimeout(() => {
+            active.classList.remove("opacity-0", "scale-95");
+          }, 50);
+        }
+      }, 350);
+    }
+
+    function openLetterCard() {
+      navigateTo("letter");
+    }
+
+    // Smart Gemini AI Dog Chat Engine
+    async function handleDogChat(e) {
+      e.preventDefault();
+      const input = document.getElementById("dogInput");
+      const text = input.value.trim();
+      if (!text) return;
+
+      appendChatMessage("user", text);
+      input.value = "";
+
+      // Show typing indicator
+      const typingId = showTypingIndicator();
+
+      try {
+        const dogResponse = await queryGeminiDogAI(text);
+        removeTypingIndicator(typingId);
+        appendChatMessage("dog", dogResponse);
+        dogBarkAudio();
+      } catch (err) {
+        removeTypingIndicator(typingId);
+        appendChatMessage("dog", "Woof woof! *happy tail wag* Happy birthday Cleo! Riku loves you lots! 🐾💖");
+      }
+    }
+
+    async function queryGeminiDogAI(userMsg) {
+      const apiKey = ""; // Runtime key handler
+      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+      const systemInstruction = `You are Barnaby, an extraordinarily cute, joyful, and smart virtual puppy given as a birthday gift to Cleo from Riku.
+Rule 1: Always stay in character as Barnaby the puppy (use barks like "Woof!", "Arf!", tail wags, lick licks, and cute emojis).
+Rule 2: You love Cleo immensely and know today is her birthday.
+Rule 3: You know Riku created this special birthday surprise site for Cleo because he loves and cares for her deeply.
+Rule 4: Respond specifically and intelligently to whatever Cleo says, answering her questions or chatting contextually while keeping responses short (1 to 3 sentences max) and super affectionate.`;
+
+      dogChatHistory.push({ role: "user", parts: [{ text: userMsg }] });
+
+      const payload = {
+        contents: dogChatHistory,
+        systemInstruction: { parts: [{ text: systemInstruction }] }
+      };
+
+      let delay = 1000;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          const res = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error("API request failed");
+          const data = await res.json();
+          const reply = data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (reply) {
+            dogChatHistory.push({ role: "model", parts: [{ text: reply }] });
+            return reply;
+          }
+        } catch (err) {
+          if (attempt === 2) throw err;
+          await new Promise(r => setTimeout(r, delay));
+          delay *= 2;
+        }
+      }
+      return "Woof! *tail wagging* You are the sweetest birthday girl, Cleo! 💖";
+    }
+
+    function showTypingIndicator() {
+      const chatBox = document.getElementById("chatMessages");
+      const id = "typing-" + Date.now();
+      const msgDiv = document.createElement("div");
+      msgDiv.id = id;
+      msgDiv.className = "flex items-start gap-2";
+      msgDiv.innerHTML = `
+        <div class="w-7 h-7 rounded-full bg-brand-100 flex items-center justify-center text-xs flex-shrink-0">🐶</div>
+        <div class="bg-white border border-brand-100 rounded-2xl rounded-tl-none p-3 text-xs text-brand-400 italic shadow-sm">
+          Barnaby is thinking... 🐾
+        </div>
+      `;
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return id;
+    }
+
+    function removeTypingIndicator(id) {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    }
+
+    function sendQuickMessage(msg) {
+      document.getElementById("dogInput").value = msg;
+      handleDogChat(new Event('submit'));
+    }
+
+    function appendChatMessage(sender, msg) {
+      const chatBox = document.getElementById("chatMessages");
+      const msgDiv = document.createElement("div");
+
+      if (sender === "user") {
+        msgDiv.className = "flex items-start justify-end gap-2";
+        msgDiv.innerHTML = `
+          <div class="bg-brand-500 text-white rounded-2xl rounded-tr-none p-3 text-xs shadow-sm max-w-[80%]">
+            ${escapeHtml(msg)}
+          </div>
+        `;
+      } else {
+        msgDiv.className = "flex items-start gap-2";
+        msgDiv.innerHTML = `
+          <div class="w-7 h-7 rounded-full bg-brand-100 flex items-center justify-center text-xs flex-shrink-0">🐶</div>
+          <div class="bg-white border border-brand-100 rounded-2xl rounded-tl-none p-3 text-xs text-brand-700 shadow-sm max-w-[80%] leading-relaxed">
+            ${escapeHtml(msg)}
+          </div>
+        `;
+      }
+
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function dogBarkAudio() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(45, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch(e) {}
+    }
+
+    function showToast(message, iconClass) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toastMsg").innerText = message;
+      document.getElementById("toastIcon").innerHTML = `<i class="fa-solid ${iconClass} text-brand-500"></i>`;
+
+      toast.classList.remove("translate-y-[-100px]", "opacity-0");
+      toast.classList.add("translate-y-0", "opacity-100");
+
+      setTimeout(() => {
+        toast.classList.remove("translate-y-0", "opacity-100");
+        toast.classList.add("translate-y-[-100px]", "opacity-0");
+      }, 2500);
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+  </script>
+</body>
+</html>
